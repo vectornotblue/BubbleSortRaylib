@@ -51,7 +51,7 @@ int main()
     bool start = false;
     int array[barCount] = {0};
     int barWidth = (int)(screenWidth/barCount);
-   
+    Color barColor;
     srand(time(NULL));
 
     RandomiseArray(barCount, array, screenHeight);
@@ -76,10 +76,14 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
         for(int i = 0; i < barCount; i++){
-            DrawRectangle(i*barWidth, screenHeight-array[i], barWidth, array[i], WHITE);
+            double hue = ((array[i])/((double)screenHeight))*360;
+            barColor = ColorFromHSV(hue, 1, 1);
+            DrawRectangle(i*barWidth, 0, barWidth, screenHeight/2.0, barColor);
+            DrawRectangle(i*barWidth, screenHeight-array[i]/2.0, barWidth, array[i]/2.0, WHITE);
+
         }
         int blueIndex = bubbleSort.GetSortingIndex();
-        DrawRectangle(blueIndex*barWidth, screenHeight-array[blueIndex], barWidth*2, array[blueIndex], lightBlue);
+        DrawRectangle(blueIndex*barWidth, 0, barWidth*2, screenHeight, lightBlue);
         std::string fps = std::to_string(GetFPS());
         DrawText(fps.c_str(), 0,0,20,lightBlue);
         EndDrawing();
