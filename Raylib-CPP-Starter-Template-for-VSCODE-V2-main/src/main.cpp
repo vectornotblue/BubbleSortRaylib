@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <iostream>
+#include <cmath>
+
 
 class BubbleSort{
     private:
@@ -12,6 +14,8 @@ class BubbleSort{
             return j;
         }
         bool sorted = false;
+
+        bool GetIsSorted(){return sorted;}
         void BubbleStep(int array[], int arraySize){
             if(i >= arraySize){
                 sorted = true;
@@ -44,15 +48,16 @@ void RandomiseArray(int barCount, int array[], int screenHeight){
 int main() 
 {
     
-    const int screenWidth = 1600;
-    const int screenHeight = 1000;
-    const int barCount = 800;
+    const int screenWidth = 1920;
+    const int screenHeight = 1080;
+    const int barCount = 480;
     const Color lightBlue = {150,150,255,255};
     bool start = false;
     int array[barCount] = {0};
     int barWidth = (int)(screenWidth/barCount);
     Color barColor;
     srand(time(NULL));
+    
 
     RandomiseArray(barCount, array, screenHeight);
     
@@ -78,8 +83,15 @@ int main()
         for(int i = 0; i < barCount; i++){
             double hue = ((array[i])/((double)screenHeight))*360;
             barColor = ColorFromHSV(hue, 1, 1);
-            DrawRectangle(i*barWidth, 0, barWidth, screenHeight/2.0, barColor);
-            DrawRectangle(i*barWidth, screenHeight-array[i]/2.0, barWidth, array[i]/2.0, WHITE);
+            DrawRectangle(i*barWidth, screenHeight/3.0, barWidth, screenHeight/3.0, barColor);
+            DrawRectangle(i*barWidth, screenHeight-array[i]/3.0, barWidth, array[i]/3.0, WHITE);
+            double angle = (140.0-(array[i]/(double)screenHeight*100.0))/180.0*PI;
+            double lineLenght = screenHeight/3.0;
+            double x1 = i*barWidth;
+            double y1 = 0;
+            double x2 = x1 +cos(angle)*lineLenght;
+            double y2 = sin(angle)*lineLenght;
+            DrawLine(x1,y1,x2,y2, WHITE);
 
         }
         int blueIndex = bubbleSort.GetSortingIndex();
