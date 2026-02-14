@@ -14,7 +14,11 @@ class BubbleSort{
             return j;
         }
         bool sorted = false;
-
+        void Reset(){
+            i=0;
+            j=0;
+            sorted = false;
+        }
         bool GetIsSorted(){return sorted;}
         void BubbleStep(int array[], int arraySize){
             if(i >= arraySize){
@@ -47,12 +51,12 @@ void RandomiseArray(int barCount, int array[], int screenHeight){
 
 int main() 
 {
-    
+    const int offset = 50;
     const int screenWidth = 1920;
     const int screenHeight = 1080;
     const int barCount = 480;
     const Color lightBlue = {150,150,255,255};
-    bool start = false;
+    bool isPlaying = false;
     int array[barCount] = {0};
     int barWidth = (int)(screenWidth/barCount);
     Color barColor;
@@ -65,19 +69,19 @@ int main()
     
     BubbleSort bubbleSort;
 
-    while (!WindowShouldClose() && !start){
-        BeginDrawing();
-        if(IsKeyPressed(KEY_SPACE)){
-            start = true;
-        }
-        for(int i = 0; i < barCount; i++){
-            DrawRectangle(i*barWidth, screenHeight-array[i], barWidth, array[i], WHITE);
-        }
-        EndDrawing();
-    }
     while (!WindowShouldClose())
     {
-        bubbleSort.BubbleStep(array, barCount);
+        if(isPlaying){
+            bubbleSort.BubbleStep(array, barCount);
+        }
+        if(IsKeyPressed(KEY_SPACE)){
+            isPlaying = !isPlaying;
+        }
+        if(IsKeyPressed(KEY_R)){
+            bubbleSort.Reset();
+            isPlaying = false;
+            RandomiseArray(barCount, array, screenHeight);
+        }
         BeginDrawing();
         ClearBackground(BLACK);
         for(int i = 0; i < barCount; i++){
@@ -96,8 +100,10 @@ int main()
         }
         int blueIndex = bubbleSort.GetSortingIndex();
         DrawRectangle(blueIndex*barWidth, 0, barWidth*2, screenHeight, lightBlue);
-        std::string fps = std::to_string(GetFPS());
-        DrawText(fps.c_str(), 0,0,20,lightBlue);
+        std::string text = std::to_string(GetFPS());
+        DrawRectangle(0,0,550,40,BLACK);
+        DrawText(text.c_str(), 0,0,20,lightBlue);
+        DrawText("              (R)-Reshuffle       (Space)-Start/Stop", 0,0,20,lightBlue);        
         EndDrawing();
         
     }
